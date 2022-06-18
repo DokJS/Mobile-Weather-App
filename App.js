@@ -1,17 +1,47 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { createUrl } from './API/Request'
-import { View, TextInput, StyleSheet, Text, ImageBackground } from 'react-native'
+import FetchData from './Functions/Fetch'
+import { View, TextInput, StyleSheet, Text, ImageBackground, ActivityIndicator } from 'react-native'
 
 const image = {uri: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/sunset-quotes-21-1586531574.jpg"}
 const App = () => {
+  const [inputValue, setInputValue] = useState('')
+  const [isDataLoading, setIsDataLoading] = useState(true)
+  const [data,setData] = useState({})
+  
+  const searchWeatherData = ({nativeEvent}) => {
+    const { text } = nativeEvent
+    if (text.length > 0) {
+      setData({}) // for remove previous data before new call
+      setIsDataLoading(true)
+    }
+  }
+
+  useEffect(() => {
+    if (isDataLoading) {
+      const currentRequestUrl = createUrl(inputValue)
+      FetchData(currentRequestUrl)
+        .then(data => {
+          setData(data)
+          setIsDataLoading(false)
+        })
+      .catch(error => console.log(error))
+    }
+  },[isDataLoading])
   
   return (
     <View style={styles.view_container}>
       <ImageBackground style={styles.view_background} source={image}>
         <View style={styles.view_top}>
-          <TextInput style={styles.view_input} placeholder='Enter your location' />
+          <TextInput style={styles.view_input} 
+                      placeholder='Enter your location' 
+                      onChangeText={(text)=>setInputValue(text)} 
+                      value={inputValue}
+                      onSubmitEditing={(event)=>searchWeatherData(event)} />
       </View>
-      <View style={styles.view_bottom}>
+        {
+          isDataLoading ? <ActivityIndicator size={'large'} color={'gray'} />
+            :(<View style={styles.view_bottom}>
           <View style={styles.description_main}>
             <Text style={styles.view_mainStyle}>Dakar</Text>
             <Text style={[styles.view_mainStyle,{transform:[{translateX:30}]},{marginTop:5}]}>30°C</Text>
@@ -31,7 +61,8 @@ const App = () => {
             <Text style={styles.view_secondaryStyle}>winds</Text>
           </View> 
         </View>
-      </View>
+      </View>)
+        }
 
       </ImageBackground>
     </View>
@@ -81,11 +112,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     top: '50%',
-    right: '50%',
+    right: 0,
     fontSize: 30,
     fontWeight: '700',
     color: 'white',
-    transform:[{translateX:50}]
+    textAlign: 'center',
+    transform:[{rotate:'-90deg'}]
   },
   description_secondary: {
     flex: 1,
@@ -100,7 +132,7 @@ const styles = StyleSheet.create({
     bottom:50
   },
   view_mainStyle: {
-    fontSize: 30,
+    fontSize: 40,
     fontWeight: '600',
     color:'grey'
   },
