@@ -23,6 +23,7 @@ const App = () => {
       FetchData(currentRequestUrl)
         .then(data => {
           setData(data)
+          console.log(data)
           setIsDataLoading(false)
         })
       .catch(error => console.log(error))
@@ -40,28 +41,30 @@ const App = () => {
                       onSubmitEditing={(event)=>searchWeatherData(event)} />
       </View>
         {
-          isDataLoading ? <ActivityIndicator size={'large'} color={'gray'} />
-            :(<View style={styles.view_bottom}>
+          isDataLoading ? <ActivityIndicator size='large' color='white' />
+            : (data.name && (
+              <View style={styles.view_bottom}>
           <View style={styles.description_main}>
-            <Text style={styles.view_mainStyle}>Dakar</Text>
-            <Text style={[styles.view_mainStyle,{transform:[{translateX:30}]},{marginTop:5}]}>30°C</Text>
+                  <Text style={styles.view_mainStyle}>{data.name}</Text>
+                  <Text style={[styles.view_mainStyle, { transform: [{ translateX: 30 }] }, { marginTop: 5 }]}>{Math.trunc(data.main.temp)}°C</Text>
         </View>
-        <Text style={styles.description}>Nuageux</Text>
+                <Text style={styles.description}>{data.weather[0].description}</Text>
         <View style={styles.description_secondary}>
           <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
-            <Text style={styles.view_secondaryStyle}>30°C</Text>
+            <Text style={styles.view_secondaryStyle}>{Math.trunc(data.main.feels_like)}°C</Text>
             <Text style={styles.view_secondaryStyle}>Feels Like</Text>
           </View>
           <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-            <Text style={styles.view_secondaryStyle}>72%</Text>
+                    <Text style={styles.view_secondaryStyle}>{data.main.humidity}%</Text>
             <Text style={styles.view_secondaryStyle}>Humidity</Text>
           </View>
           <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-            <Text style={styles.view_secondaryStyle}>2 MPH</Text>
+                    <Text style={styles.view_secondaryStyle}>{Math.trunc(data.wind.speed)}%</Text>
             <Text style={styles.view_secondaryStyle}>winds</Text>
           </View> 
         </View>
-      </View>)
+      </View>
+            ))
         }
 
       </ImageBackground>
@@ -90,7 +93,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     opacity: 0.9,
     paddingLeft: 15,
-    color:'black'
+    color: 'black',
+    borderWidth: 1,
+    borderStyle:'solid'
   },
   view_bottom: {
     flex: 5,
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     top: '50%',
-    right: 0,
+    right: 10,
     fontSize: 30,
     fontWeight: '700',
     color: 'white',
@@ -140,6 +145,12 @@ const styles = StyleSheet.create({
     fontSize:20,
     fontWeight: '600',
     color:'grey'
+  },
+  indicator_style:{
+    position: 'absolute',
+    zIndex: 20,
+    top: '50%',
+    right:'50%'
   }
 })
 export default App
