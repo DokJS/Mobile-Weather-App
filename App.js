@@ -23,7 +23,6 @@ const App = () => {
       FetchData(currentRequestUrl)
         .then(data => {
           setData(data)
-          console.log(data)
           setIsDataLoading(false)
         })
       .catch(error => console.log(error))
@@ -111,7 +110,10 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     opacity: 0.4,
     justifyContent: 'center',
-    alignItems:'center'
+    alignItems: 'center',
+    borderWidth: 0.5,
+    borderStyle: 'solid',
+    borderColor:'black'
   },
   description: {
     position: 'absolute',
@@ -134,7 +136,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     opacity: 0.4,
     position: 'absolute',
-    bottom:50
+    bottom: 50,
+       borderWidth: 0.5,
+    borderStyle: 'solid',
+    borderColor:'black'
   },
   view_mainStyle: {
     fontSize: 40,
