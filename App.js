@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {createUrl} from './API/Request';
+import React, { useState, useEffect } from 'react';
+import { createUrl } from './API/Request';
 import FetchData from './Functions/Fetch';
 import {
   View,
@@ -16,10 +16,10 @@ const image = {
 const App = () => {
   const [inputValue, setInputValue] = useState('');
   const [isDataLoading, setIsDataLoading] = useState(true);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
 
-  const searchWeatherData = ({nativeEvent}) => {
-    const {text} = nativeEvent;
+  const searchWeatherData = ({ nativeEvent }) => {
+    const { text } = nativeEvent;
     if (text.length > 0) {
       setData({}); // for remove previous data before new call
       setIsDataLoading(true);
@@ -53,15 +53,15 @@ const App = () => {
         {isDataLoading ? (
           <ActivityIndicator size="large" color="white" />
         ) : (
-          data.name !== undefined && (
+          data?.name && (
             <View style={styles.view_bottom}>
               <View style={styles.description_main}>
                 <Text style={styles.view_mainStyle}>{data.name}</Text>
                 <Text
                   style={[
                     styles.view_mainStyle,
-                    {transform: [{translateX: 30}]},
-                    {marginTop: 5},
+                    { transform: [{ translateX: 30 }] },
+                    { marginTop: 5 },
                   ]}>
                   {Math.trunc(data.main.temp)}°C
                 </Text>
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: 'white',
     textAlign: 'center',
-    transform: [{rotate: '-90deg'}],
+    transform: [{ rotate: '-90deg' }],
   },
   description_secondary: {
     flex: 1,
